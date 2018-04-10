@@ -54,5 +54,38 @@ class Movies:
             self.movies.append(MovieData(m["title"], m["screenshots_links"], int(m["votes_count"]), m["id"]))
             # todo change votes_count type in json document str -> int
 
+    def get_movies(self, count=1, difficult=None, except_movies_with_ids=None):
+        return []
+
+
+class PickedMovies:
+    __OPTIONS_COUNT = 4
+
+    def __init__(self, options_count=__OPTIONS_COUNT):
+        self.movies = Movies()
+        self.options_count = options_count
+        self.answer_options = None
+        self.picked_movies_history = []
+
+    def pick_movie(self, difficult):
+        self.answer_options = self.movies.get_movies(count=1,
+                                                     difficult=difficult,
+                                                     except_movies_with_ids=self.picked_movies_history)
+        self.picked_movies_history.append(self.answer_options[0].id)
+        self.answer_options += self.movies.get_movies(count=self.options_count - 1,
+                                                      difficult=difficult,
+                                                      except_movies_with_ids=[self.picked_movies_history[-1]])
+
+    def get_picked_movie(self):
+        return self.get_answer_options()[0]
+
+    # return picked movie and (self.options_count - 1) other movies
+    def get_answer_options(self):
+        if self.answer_options is None:
+            raise Exception('Movie is not picked yet')
+        return self.answer_options
+
+    def clear_picked_movies_history(self):
+        self.picked_movies_history = []
 
 
