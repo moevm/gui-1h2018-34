@@ -2,7 +2,6 @@ import json
 import urllib.request
 import random
 
-
 def compute_difficult(votes_count):
     return 1
 
@@ -30,6 +29,9 @@ class MovieData:
         self.__download_image(screenshot_link, self.__SCREENSHOT_LOCATION__)
         return self.__SCREENSHOT_LOCATION__
 
+    def get_id(self):
+        return self.id
+
 
 class Movies:
     """
@@ -43,10 +45,10 @@ class Movies:
             'http://kinopoisk.ru/images/kadr/633725.jpg'],
         'id': 718},
     """
-    __movies_json_path = "../movies.json"
+    __MOVIES_JSON_PATH = "../movies.json"
 
     def __init__(self):
-        with open(self.__movies_json_path, "r") as f:
+        with open(self.__MOVIES_JSON_PATH, "r") as f:
             movies = json.load(f)
 
         self.movies = []
@@ -55,7 +57,12 @@ class Movies:
             # todo change votes_count type in json document str -> int
 
     def get_movies(self, count=1, difficult=None, except_movies_with_ids=None):
-        return []
+        movies = self.movies
+        if difficult is not None:
+            movies = filter(lambda m: m.get_difficult() == difficult, movies)
+        if except_movies_with_ids is not None:
+            movies = filter(lambda m: m.get_id() not in except_movies_with_ids, movies)
+        return random.sample(list(movies), count)
 
 
 class PickedMovies:
@@ -71,7 +78,7 @@ class PickedMovies:
         self.answer_options = self.movies.get_movies(count=1,
                                                      difficult=difficult,
                                                      except_movies_with_ids=self.picked_movies_history)
-        self.picked_movies_history.append(self.answer_options[0].id)
+        self.picked_movies_history.append(self.answer_options[0].get_id())
         self.answer_options += self.movies.get_movies(count=self.options_count - 1,
                                                       difficult=difficult,
                                                       except_movies_with_ids=[self.picked_movies_history[-1]])
