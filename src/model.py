@@ -65,7 +65,7 @@ class Movies:
         return random.sample(list(movies), count)
 
 
-class PickedMovies:
+class MoviesPicker:
     __OPTIONS_COUNT = 4
 
     def __init__(self, options_count=__OPTIONS_COUNT):
