@@ -8,7 +8,6 @@ class AnswerOptions(QObject):
 
         self.movies = Movies()
 
-
     def get_options(self, count, not_in=None, difficult=1):
         # todo rename not_in
 
