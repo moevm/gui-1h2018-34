@@ -11,7 +11,7 @@ ui.setupUi(window)
 
 game_controller = controller.GameController((ui.pic_label.width(), ui.pic_label.height()))
 game_controller.screenshot_changed.connect(ui.pic_label.setPixmap)
-
+game_controller.score_changed.connect(ui.score.setNum)
 
 buttons = view.AnswerButtons()
 buttons.addButton(ui.pushButton, 0)
