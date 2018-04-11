@@ -15,13 +15,14 @@ class GameController(QObject):
         self.timer.timeout.connect(self.change_state)
         self.timer.start(5000)
 
-        self.change_state()
-
     @pyqtSlot()
     def change_state(self):
-        self.picker.pick_movie(difficult=1)
-        picked_movie = self.picker.get_picked_movie()
+        picked_movies = self.picker.pick_movies(difficult=1)
+        answer = picked_movies.get_answer()
 
-        pixmap = QPixmap(picked_movie.get_random_screenshot())
+        pixmap = QPixmap(answer.get_screenshot())
         self.screenshot_changed.emit(pixmap)
-        self.title_changed.emit(picked_movie.get_title())
+        self.title_changed.emit(answer.get_title())
+
+
+

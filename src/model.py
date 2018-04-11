@@ -1,22 +1,29 @@
 import json
 import urllib.request
 import random
+import os
+import collections
 
 def compute_difficult(votes_count):
     return 1
 
 
 class MovieData:
-    __SCREENSHOT_LOCATION__ = "../img/screenshot.jpg"
+    __SCREENSHOT_LOCATION = "../img/screenshot{}.jpg"
 
     def __init__(self, title, screenshots_links, votes_count, id):
         self.title = title
-        self.screenshots_links = screenshots_links
+        self.screenshot_link = random.choice(screenshots_links)
         self.votes_count = votes_count
         self.id = id
 
-    def __download_image(self, url, location):
-        urllib.request.urlretrieve(url, location)
+        self.__screenshot_location = self.__SCREENSHOT_LOCATION.format(id)
+        self.__is_screenshot_downloaded = False
+
+    def __del__(self):
+        if self.__is_screenshot_downloaded:
+            os.remove(self.__screenshot_location)
+            self.__is_screenshot_downloaded = False
 
     def get_title(self):
         return self.title
@@ -24,10 +31,14 @@ class MovieData:
     def get_difficult(self):
         return compute_difficult(self.votes_count)
 
-    def get_random_screenshot(self):
-        screenshot_link = random.choice(self.screenshots_links)
-        self.__download_image(screenshot_link, self.__SCREENSHOT_LOCATION__)
-        return self.__SCREENSHOT_LOCATION__
+    def download_screenshot(self):
+        if not self.__is_screenshot_downloaded:
+            urllib.request.urlretrieve(self.screenshot_link, self.__screenshot_location)
+            self.__is_screenshot_downloaded = True
+
+    def get_screenshot(self):
+        self.download_screenshot()
+        return self.__screenshot_location
 
     def get_id(self):
         return self.id
@@ -65,34 +76,52 @@ class Movies:
         return random.sample(list(movies), count)
 
 
+class PickedMovies:
+    def __init__(self, answer, answer_options):
+        # answer_options is a list of MovieData objects. It includes answer
+        self.answer = answer
+        self.answer_options = answer_options
+
+    def get_answer(self):
+        return self.answer
+
+    def get_answer_options(self):
+        return self.answer_options
+
+
 class MoviesPicker:
     __OPTIONS_COUNT = 4
 
     def __init__(self, options_count=__OPTIONS_COUNT):
         self.movies = Movies()
         self.options_count = options_count
-        self.answer_options = None
         self.picked_movies_history = []
+        self.picked_movies_cash = collections.deque([None, None], maxlen=2)
 
-    def pick_movie(self, difficult):
-        self.answer_options = self.movies.get_movies(count=1,
-                                                     difficult=difficult,
-                                                     except_movies_with_ids=self.picked_movies_history)
-        self.picked_movies_history.append(self.answer_options[0].get_id())
-        self.answer_options += self.movies.get_movies(count=self.options_count - 1,
-                                                      difficult=difficult,
-                                                      except_movies_with_ids=[self.picked_movies_history[-1]])
+    def __pick_movies(self, difficult):
+        answer_options = self.movies.get_movies(count=1,
+                                                difficult=difficult,
+                                                except_movies_with_ids=self.picked_movies_history)
+        self.picked_movies_history.append(answer_options[0].get_id())
+        answer_options += self.movies.get_movies(count=self.options_count - 1,
+                                                 difficult=difficult,
+                                                 except_movies_with_ids=[self.picked_movies_history[-1]])
 
-    def get_picked_movie(self):
-        return self.get_answer_options()[0]
+        return PickedMovies(answer_options[0], answer_options)
 
-    # return picked movie and (self.options_count - 1) other movies
-    def get_answer_options(self):
-        if self.answer_options is None:
-            raise Exception('Movie is not picked yet')
-        return self.answer_options
+    def pick_movies(self, difficult):
+        # todo download asynchronously
+        result = self.picked_movies_cash[-1]
+        if result is None or result.get_answer().get_difficult() != difficult:
+            self.picked_movies_cash.append(self.__pick_movies(difficult))
+            result = self.picked_movies_cash[-1]
 
-    def clear_picked_movies_history(self):
-        self.picked_movies_history = []
+        next_pick = self.__pick_movies(difficult)
+        next_pick.answer.download_screenshot()
+        self.picked_movies_cash.append(next_pick)
+
+        return result
+
+
 
 
