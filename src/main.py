@@ -18,10 +18,9 @@ buttons.addButton(ui.pushButton, 0)
 buttons.addButton(ui.pushButton_2, 1)
 buttons.addButton(ui.pushButton_3, 2)
 buttons.addButton(ui.pushButton_4, 3)
-
 buttons.buttonClicked[int].connect(game_controller.choose_answer)
-game_controller.answer_options_changed.connect(buttons.change_labels)
 
+game_controller.answer_options_changed.connect(buttons.change_labels)
 game_controller.change_state()
 
 window.show()

@@ -3,10 +3,23 @@ import urllib.request
 import random
 import os
 import collections
+import enum
+
+
+class Difficult(enum.Enum):
+    EASY = 1
+    NORMAL = 2
+    HARD = 3
 
 
 def compute_difficult(votes_count):
-    return 1
+    left, right = 20000, 100000
+    if votes_count < left:
+        return Difficult.HARD
+    elif left <= votes_count < right:
+        return Difficult.NORMAL
+    else:  # right < votes_count
+        return Difficult.EASY
 
 
 class MovieData:
@@ -122,6 +135,9 @@ class MoviesPicker:
         self.picked_movies_cash.append(next_pick)
 
         return result
+
+    def clear_picked_movies_history(self):
+        self.picked_movies_history = []
 
 
 class Score:
