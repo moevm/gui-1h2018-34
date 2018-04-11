@@ -81,7 +81,7 @@ class PickedMovies:
     def __init__(self, answer, answer_options):
         # answer_options is a list of MovieData objects. It includes answer
         self.answer = answer
-        self.answer_options = answer_options
+        self.answer_options = random.sample(answer_options, k=len(answer_options))
 
     def get_answer(self):
         return self.answer
