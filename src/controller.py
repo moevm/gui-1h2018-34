@@ -1,6 +1,7 @@
 import model
 from PyQt5.QtCore import QTimer, pyqtSlot, pyqtSignal, QObject, Qt
 from PyQt5.QtGui import QPixmap
+from PyQt5.QtWidgets import QMessageBox
 
 
 class GameController(QObject):
@@ -21,7 +22,10 @@ class GameController(QObject):
             print('Correct')
             self.score.add_points(1)
         else:
-            print("Not correct")
+            # game over
+            dialog = QMessageBox()
+            dialog.setText("Game Over\n Your sore: {}".format(self.score.get_score()))
+            dialog.exec()
             self.score.clear_score()
 
         self.score_changed.emit(self.score.get_score())
