@@ -23,7 +23,8 @@ def compute_difficult(votes_count):
 
 
 class MovieData:
-    __SCREENSHOT_LOCATION = "../img/screenshot{}.jpg"
+    __IMAGE_DIRECTORY = "../img/"
+    __SCREENSHOT_LOCATION = "{}screenshot{}.jpg"
 
     def __init__(self, title, screenshots_links, votes_count, id):
         self.title = title
@@ -31,8 +32,12 @@ class MovieData:
         self.votes_count = votes_count
         self.id = id
 
-        self.__screenshot_location = self.__SCREENSHOT_LOCATION.format(id)
+        if not os.path.exists(self.__IMAGE_DIRECTORY):
+            os.makedirs(self.__IMAGE_DIRECTORY)
+        self.__screenshot_location = self.__SCREENSHOT_LOCATION.format(self.__IMAGE_DIRECTORY, id)
         self.__is_screenshot_downloaded = False
+
+
 
     def __del__(self):
         if self.__is_screenshot_downloaded:
