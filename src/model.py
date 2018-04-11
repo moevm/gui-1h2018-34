@@ -4,6 +4,7 @@ import random
 import os
 import collections
 
+
 def compute_difficult(votes_count):
     return 1
 

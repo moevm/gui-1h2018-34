@@ -9,7 +9,7 @@ window = QDialog()
 ui = Ui_Dialog()
 ui.setupUi(window)
 
-game_controller = controller.GameController()
+game_controller = controller.GameController((ui.pic_label.width(), ui.pic_label.height()))
 game_controller.screenshot_changed.connect(ui.pic_label.setPixmap)
 game_controller.title_changed.connect(ui.movieName.setText)
 
