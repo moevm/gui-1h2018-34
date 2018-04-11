@@ -57,7 +57,7 @@ class Movies:
             'http://kinopoisk.ru/images/kadr/633725.jpg'],
         'id': 718},
     """
-    __MOVIES_JSON_PATH = "../movies.json"
+    __MOVIES_JSON_PATH = "../data/movies.json"
 
     def __init__(self):
         with open(self.__MOVIES_JSON_PATH, "r") as f:
