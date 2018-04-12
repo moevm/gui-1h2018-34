@@ -41,7 +41,7 @@
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>560</x>
+     <x>800</x>
      <y>20</y>
      <width>54</width>
      <height>17</height>
@@ -59,7 +59,7 @@
   <widget class="QLabel" name="score">
    <property name="geometry">
     <rect>
-     <x>640</x>
+     <x>880</x>
      <y>20</y>
      <width>54</width>
      <height>17</height>
@@ -74,7 +74,7 @@
     <string>0</string>
    </property>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>10</x>
