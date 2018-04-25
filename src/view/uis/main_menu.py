@@ -11,9 +11,9 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
-        Form.resize(487, 419)
+        Form.resize(530, 427)
         self.widget = QtWidgets.QWidget(Form)
-        self.widget.setGeometry(QtCore.QRect(90, 60, 301, 281))
+        self.widget.setGeometry(QtCore.QRect(60, 60, 401, 301))
         self.widget.setObjectName("widget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.widget)
         self.verticalLayout.setContentsMargins(0, 20, 0, 20)
@@ -25,6 +25,7 @@ class Ui_Form(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.newGameButton.sizePolicy().hasHeightForWidth())
         self.newGameButton.setSizePolicy(sizePolicy)
+        self.newGameButton.setMaximumSize(QtCore.QSize(400, 60))
         self.newGameButton.setObjectName("newGameButton")
         self.verticalLayout.addWidget(self.newGameButton)
         self.recordsButton = QtWidgets.QPushButton(self.widget)
@@ -33,6 +34,7 @@ class Ui_Form(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.recordsButton.sizePolicy().hasHeightForWidth())
         self.recordsButton.setSizePolicy(sizePolicy)
+        self.recordsButton.setMaximumSize(QtCore.QSize(400, 60))
         self.recordsButton.setObjectName("recordsButton")
         self.verticalLayout.addWidget(self.recordsButton)
         self.exitButton = QtWidgets.QPushButton(self.widget)
@@ -41,6 +43,7 @@ class Ui_Form(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.exitButton.sizePolicy().hasHeightForWidth())
         self.exitButton.setSizePolicy(sizePolicy)
+        self.exitButton.setMaximumSize(QtCore.QSize(400, 60))
         self.exitButton.setObjectName("exitButton")
         self.verticalLayout.addWidget(self.exitButton)
 

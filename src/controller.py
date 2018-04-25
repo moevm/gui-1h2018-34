@@ -14,6 +14,7 @@ class GameController(QObject):
         QObject.__init__(self, parent)
         self.image_size = image_size
         self.picked_movies = None
+        self.difficult = model.Difficult.EASY
 
         self.picker = model.MoviesPicker()
         self.score = model.Score()
@@ -22,9 +23,7 @@ class GameController(QObject):
         dialog = QMessageBox()
         dialog.setText("Game Over\n Your sore: {}".format(self.score.get_score()))
         dialog.exec()
-        self.score.clear_score()
-        self.picker.clear_picked_movies_history()
-
+        self.start_new_game(self.difficult)
 
     @pyqtSlot(int)
     def choose_answer(self, answer_id):
@@ -34,11 +33,18 @@ class GameController(QObject):
             self.__game_over()
 
         self.score_changed.emit(self.score.get_score())
-        self.change_state()
+        self.next_screenshot()
+
+    @pyqtSlot(int)
+    def start_new_game(self, difficult):
+        self.difficult = difficult
+        self.score.clear_score()
+        self.picker.clear_picked_movies_history()
+        self.next_screenshot()
 
     @pyqtSlot()
-    def change_state(self):
-        self.picked_movies = self.picker.pick_movies(model.Difficult.EASY)
+    def next_screenshot(self):
+        self.picked_movies = self.picker.pick_movies(self.difficult)
         answer = self.picked_movies.get_answer()
 
         pixmap = QPixmap(answer.get_screenshot())
@@ -52,7 +58,13 @@ class GameController(QObject):
 
 class UIController(QObject):
     show_game_window = pyqtSignal()
+    hide_game_window = pyqtSignal()
+    show_main_menu = pyqtSignal()
     hide_main_menu = pyqtSignal()
+    show_difficult_window = pyqtSignal()
+    hide_difficult_window = pyqtSignal()
+
+    start_new_game = pyqtSignal(int)
 
     def __init__(self, parent=None):
         QObject.__init__(self, parent)
@@ -60,4 +72,10 @@ class UIController(QObject):
     @pyqtSlot()
     def new_game(self):
         self.hide_main_menu.emit()
+        self.show_difficult_window.emit()
+
+    @pyqtSlot(int)
+    def start_game(self, difficult):
+        self.hide_difficult_window.emit()
         self.show_game_window.emit()
+        self.start_new_game.emit(difficult)

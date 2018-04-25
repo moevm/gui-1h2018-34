@@ -6,10 +6,10 @@ import collections
 import enum
 
 
-class Difficult(enum.Enum):
-    EASY = 1
-    NORMAL = 2
-    HARD = 3
+class Difficult(enum.IntEnum):
+    EASY = 0
+    NORMAL = 1
+    HARD = 2
 
 
 def compute_difficult(votes_count):
