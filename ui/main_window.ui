@@ -13,144 +13,144 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QLabel" name="pic_label">
-   <property name="geometry">
-    <rect>
-     <x>30</x>
-     <y>80</y>
-     <width>881</width>
-     <height>431</height>
-    </rect>
-   </property>
-   <property name="sizePolicy">
-    <sizepolicy hsizetype="Maximum" vsizetype="Expanding">
-     <horstretch>0</horstretch>
-     <verstretch>0</verstretch>
-    </sizepolicy>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-   <property name="scaledContents">
-    <bool>false</bool>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label">
-   <property name="geometry">
-    <rect>
-     <x>800</x>
-     <y>20</y>
-     <width>54</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>12</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>Score:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="score">
-   <property name="geometry">
-    <rect>
-     <x>880</x>
-     <y>20</y>
-     <width>54</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>12</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>0</string>
-   </property>
-  </widget>
-  <widget class="QWidget" name="layoutWidget">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>540</y>
-     <width>931</width>
-     <height>161</height>
-    </rect>
-   </property>
-   <layout class="QGridLayout" name="gridLayout">
-    <property name="topMargin">
-     <number>20</number>
-    </property>
-    <property name="bottomMargin">
-     <number>20</number>
-    </property>
-    <property name="horizontalSpacing">
-     <number>0</number>
-    </property>
-    <property name="verticalSpacing">
-     <number>20</number>
-    </property>
-    <item row="0" column="0">
-     <widget class="QPushButton" name="pushButton">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="text">
-       <string>PushButton</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="1">
-     <widget class="QPushButton" name="pushButton_2">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="text">
-       <string>PushButton</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="0">
-     <widget class="QPushButton" name="pushButton_3">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="text">
-       <string>PushButton</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="1">
-     <widget class="QPushButton" name="pushButton_4">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="text">
-       <string>PushButton</string>
-      </property>
-     </widget>
-    </item>
-   </layout>
-  </widget>
+  <layout class="QGridLayout" name="gridLayout_2">
+   <item row="0" column="5">
+    <widget class="QLabel" name="score">
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>0</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="3" colspan="3">
+    <widget class="QPushButton" name="pushButton_3">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>60</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>PushButton</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="3" colspan="3">
+    <widget class="QPushButton" name="pushButton_2">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>60</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>PushButton</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="4">
+    <widget class="QLabel" name="label">
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Score:</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0" colspan="3">
+    <widget class="QPushButton" name="pushButton">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>PushButton</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0" colspan="3">
+    <widget class="QPushButton" name="pushButton_4">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>60</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>PushButton</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0" colspan="6">
+    <widget class="Screenshot" name="pic_label">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>100</width>
+       <height>100</height>
+      </size>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="scaledContents">
+      <bool>false</bool>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>Screenshot</class>
+   <extends>QLabel</extends>
+   <header location="global">view/elements.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

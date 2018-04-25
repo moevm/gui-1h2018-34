@@ -10,6 +10,7 @@ app = QApplication(sys.argv)
 main_menu = windows.MainMenuWindow()
 game_window = windows.GameWindow()
 difficult_window = windows.DifficultMenuWindow()
+records_window = windows.RecordsWindow()
 
 # create elements
 buttons = elements.AnswerButtons()
@@ -30,7 +31,7 @@ difficult_buttons.addButton(difficult_window.ui.pushButton_2, model.Difficult.NO
 difficult_buttons.addButton(difficult_window.ui.pushButton_3, model.Difficult.HARD)
 
 # connect signals to slots
-game_controller.screenshot_changed.connect(game_window.ui.pic_label.setPixmap)
+game_controller.screenshot_changed.connect(game_window.ui.pic_label.set_screenshot)
 game_controller.score_changed.connect(game_window.ui.score.setNum)
 game_controller.answer_options_changed.connect(buttons.change_labels)
 
@@ -44,9 +45,17 @@ ui_controller.show_game_window.connect(game_window.show)
 ui_controller.hide_game_window.connect(game_window.hide)
 ui_controller.show_difficult_window.connect(difficult_window.show)
 ui_controller.hide_difficult_window.connect(difficult_window.hide)
+ui_controller.show_records_window.connect(records_window.show)
+ui_controller.hide_records_window.connect(records_window.hide)
 ui_controller.start_new_game.connect(game_controller.start_new_game)
 
 main_menu.ui.newGameButton.clicked.connect(ui_controller.new_game)
+main_menu.ui.recordsButton.clicked.connect(ui_controller.records)
+main_menu.ui.exitButton.clicked.connect(app.exit)
+
+records_window.ui.toMainMenu.clicked.connect(ui_controller.to_main_menu)
+
+difficult_window.ui.ToMainMenu.clicked.connect(ui_controller.to_main_menu)
 
 
 # start app

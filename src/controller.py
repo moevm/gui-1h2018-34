@@ -1,4 +1,4 @@
-from PyQt5.QtCore import pyqtSlot, pyqtSignal, QObject, Qt
+from PyQt5.QtCore import pyqtSlot, pyqtSignal, pyqtSlot, QObject, Qt
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QMessageBox
 import model
@@ -48,8 +48,7 @@ class GameController(QObject):
         answer = self.picked_movies.get_answer()
 
         pixmap = QPixmap(answer.get_screenshot())
-        w, h = self.image_size
-        pixmap = pixmap.scaled(w, h, Qt.KeepAspectRatio)
+
 
         self.screenshot_changed.emit(pixmap)
         self.answer_options_changed.emit(
@@ -63,6 +62,8 @@ class UIController(QObject):
     hide_main_menu = pyqtSignal()
     show_difficult_window = pyqtSignal()
     hide_difficult_window = pyqtSignal()
+    show_records_window = pyqtSignal()
+    hide_records_window = pyqtSignal()
 
     start_new_game = pyqtSignal(int)
 
@@ -79,3 +80,19 @@ class UIController(QObject):
         self.hide_difficult_window.emit()
         self.show_game_window.emit()
         self.start_new_game.emit(difficult)
+
+    @pyqtSlot()
+    def records(self):
+        self.hide_game_window.emit()
+        self.hide_main_menu.emit()
+        self.hide_difficult_window.emit()
+
+        self.show_records_window.emit()
+
+    @pyqtSlot()
+    def to_main_menu(self):
+        self.hide_game_window.emit()
+        self.hide_difficult_window.emit()
+        self.hide_records_window.emit()
+
+        self.show_main_menu.emit()
