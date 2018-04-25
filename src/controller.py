@@ -5,6 +5,7 @@ import model
 
 
 class GameController(QObject):
+    # Signals
     screenshot_changed = pyqtSignal("QPixmap")
     answer_options_changed = pyqtSignal(list)
     score_changed = pyqtSignal(int)
@@ -49,4 +50,14 @@ class GameController(QObject):
             [answer.get_title() for answer in self.picked_movies.get_answer_options()])
 
 
+class UIController(QObject):
+    show_game_window = pyqtSignal()
+    hide_main_menu = pyqtSignal()
 
+    def __init__(self, parent=None):
+        QObject.__init__(self, parent)
+
+    @pyqtSlot()
+    def new_game(self):
+        self.hide_main_menu.emit()
+        self.show_game_window.emit()

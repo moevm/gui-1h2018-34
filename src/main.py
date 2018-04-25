@@ -1,6 +1,7 @@
 import sys
 from ui import Ui_Dialog
-from PyQt5.QtWidgets import QApplication, QDialog
+from main_menu import Ui_Form as MainMenu
+from PyQt5.QtWidgets import QApplication, QDialog, QWidget
 import controller
 import view
 
@@ -8,6 +9,10 @@ app = QApplication(sys.argv)
 window = QDialog()
 ui = Ui_Dialog()
 ui.setupUi(window)
+
+window2 = QWidget()
+main_menu = MainMenu()
+main_menu.setupUi(window2)
 
 game_controller = controller.GameController((ui.pic_label.width(), ui.pic_label.height()))
 game_controller.screenshot_changed.connect(ui.pic_label.setPixmap)
@@ -23,5 +28,11 @@ buttons.buttonClicked[int].connect(game_controller.choose_answer)
 game_controller.answer_options_changed.connect(buttons.change_labels)
 game_controller.change_state()
 
-window.show()
+ui_controller = controller.UIController()
+ui_controller.hide_main_menu.connect(window2.hide)
+ui_controller.show_game_window.connect(window.show)
+main_menu.newGameButton.clicked.connect(ui_controller.new_game)
+
+
+window2.show()
 sys.exit(app.exec_())
