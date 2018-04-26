@@ -57,6 +57,8 @@ records_window.ui.toMainMenu.clicked.connect(ui_controller.to_main_menu)
 
 difficult_window.ui.ToMainMenu.clicked.connect(ui_controller.to_main_menu)
 
+game_window.exit_to_main_menu.connect(ui_controller.to_main_menu)
+
 
 # start app
 main_menu.show()

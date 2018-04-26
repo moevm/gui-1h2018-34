@@ -11,7 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
-        Form.resize(751, 525)
+        Form.resize(751, 557)
         self.ToMainMenu = QtWidgets.QPushButton(Form)
         self.ToMainMenu.setGeometry(QtCore.QRect(190, 470, 391, 51))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Maximum)
