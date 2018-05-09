@@ -45,8 +45,11 @@ class RecordsTable(QWidget):
             score = QLabel("0")
             self.grid.addWidget(name, row, 0)
             self.grid.addWidget(score, row, 1)
+
+        records.signals.records_updated.connect(self.update_records)
         self.update_records()
 
+    @pyqtSlot()
     def update_records(self):
         records = model.Records()
         for i, record in enumerate(records.get_records(self.difficult)):

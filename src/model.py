@@ -5,6 +5,7 @@ import os
 import collections
 import enum
 import utils
+from PyQt5.QtCore import pyqtSignal, pyqtSlot, QObject
 
 
 class Difficult(enum.IntEnum):
@@ -159,15 +160,25 @@ class Score:
 
 
 class Records(metaclass=utils.Singleton):
+    class __SignalsAndSlots(QObject):
+        # Signals
+        records_updated = pyqtSignal()
+        """
+        def __init__(self, parent=None):
+            QObject.__init__(self, parent)
+        """
     __PATH_TO_RECORDS_DATA__ = "../data/records.json"
     RECORDS_COUNT_LIMIT = 10
 
+
     def __init__(self):
         # [[{"name": "test", "score": 100}], [], []]
+        self.signals = self.__SignalsAndSlots()
+
         with open(self.__PATH_TO_RECORDS_DATA__, 'r') as f:
             self.__records = json.load(f)
 
-    def __save_to_disk(self):
+    def __save_to_disk(self) -> None:
         with open(self.__PATH_TO_RECORDS_DATA__, 'w') as f:
             json.dump(self.__records, f)
 
@@ -181,6 +192,7 @@ class Records(metaclass=utils.Singleton):
             self.__records[difficult].sort(key=lambda r: r["score"])
 
             self.__save_to_disk()
+            self.signals.records_updated.emit()
 
     def get_records(self, difficult: Difficult):
         yield from self.__records[difficult]

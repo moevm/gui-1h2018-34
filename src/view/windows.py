@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QWidget, QDialog
-from view.uis import main_menu, difficult_menu, game, records, pause_menu
+from view.uis import main_menu, difficult_menu, game, records, pause_menu, game_over_menu
 from view.elements import RecordsTable
-from model import Difficult
+import model
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, pyqtSlot, QObject, Qt
 from PyQt5.QtGui import QKeySequence
 
@@ -45,6 +45,23 @@ class RecordsWindow(QWidget):
         self.ui = records.Ui_Form()
         self.ui.setupUi(self)
 
-        self.ui.scrollArea_1.setWidget(RecordsTable(Difficult.EASY))
-        self.ui.scrollArea_2.setWidget(RecordsTable(Difficult.NORMAL))
-        self.ui.scrollArea_3.setWidget(RecordsTable(Difficult.HARD))
+        self.ui.scrollArea_1.setWidget(RecordsTable(model.Difficult.EASY))
+        self.ui.scrollArea_2.setWidget(RecordsTable(model.Difficult.NORMAL))
+        self.ui.scrollArea_3.setWidget(RecordsTable(model.Difficult.HARD))
+
+
+class GameOverWindow(QDialog):
+    name_entered = pyqtSignal(str)
+
+    def __init__(self, score: model.Score, parent=None):
+        QDialog.__init__(self, parent)
+        self.ui = game_over_menu.Ui_Dialog()
+        self.ui.setupUi(self)
+
+        self.score = score
+        self.ui.score.setText(str(score.get_score()))
+        self.ui.pushButton.pressed.connect(self.accept)
+
+    def accept(self):
+        self.name_entered.emit(self.ui.name_textbox.text())
+        super().accept()

@@ -1,7 +1,7 @@
-from PyQt5.QtCore import pyqtSlot, pyqtSignal, pyqtSlot, QObject, Qt
+from PyQt5.QtCore import pyqtSignal, pyqtSlot, QObject
 from PyQt5.QtGui import QPixmap
-from PyQt5.QtWidgets import QMessageBox
 import model
+import view.windows
 
 
 class GameController(QObject):
@@ -22,11 +22,14 @@ class GameController(QObject):
         self.records = model.Records()
 
     def __game_over(self):
-        self.records.update_records(self.difficult, self.score, "test")
-
-        dialog = QMessageBox()
-        dialog.setText("Game Over\n Your sore: {}".format(self.score.get_score()))
+        dialog = view.windows.GameOverWindow(self.score)
+        if not self.records.is_score_record(self.difficult, self.score):
+            dialog.ui.name_textbox.setVisible(False)
+            dialog.ui.new_record_label.setVisible(False)
+        else:
+            dialog.name_entered.connect(self.update_records)
         dialog.exec()
+
         self.start_new_game(self.difficult)
 
     @pyqtSlot(int)
@@ -53,10 +56,13 @@ class GameController(QObject):
 
         pixmap = QPixmap(answer.get_screenshot())
 
-
         self.screenshot_changed.emit(pixmap)
         self.answer_options_changed.emit(
             [answer.get_title() for answer in self.picked_movies.get_answer_options()])
+
+    @pyqtSlot(str)
+    def update_records(self, name):
+        self.records.update_records(self.difficult, self.score, name)
 
 
 class UIController(QObject):
