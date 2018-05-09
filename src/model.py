@@ -170,17 +170,20 @@ class Records(metaclass=utils.Singleton):
     __PATH_TO_RECORDS_DATA__ = "../data/records.json"
     RECORDS_COUNT_LIMIT = 10
 
-
     def __init__(self):
-        # [[{"name": "test", "score": 100}], [], []]
         self.signals = self.__SignalsAndSlots()
-
-        with open(self.__PATH_TO_RECORDS_DATA__, 'r') as f:
-            self.__records = json.load(f)
+        self.__records = self.__load_from_disk()
 
     def __save_to_disk(self) -> None:
         with open(self.__PATH_TO_RECORDS_DATA__, 'w') as f:
             json.dump(self.__records, f)
+
+    def __load_from_disk(self) -> list:
+        if os.path.exists(self.__PATH_TO_RECORDS_DATA__):
+            with open(self.__PATH_TO_RECORDS_DATA__, 'r') as f:
+                return json.load(f)
+        else:
+            return [[{"name": "", "score": 0} for _ in range(self.RECORDS_COUNT_LIMIT)] for _ in range(3)]
 
     def is_score_record(self, difficult: Difficult, score: Score) -> bool:
         return self.__records[difficult][0]["score"] < score.get_score()
