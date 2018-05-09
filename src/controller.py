@@ -19,7 +19,11 @@ class GameController(QObject):
         self.picker = model.MoviesPicker()
         self.score = model.Score()
 
+        self.records = model.Records()
+
     def __game_over(self):
+        self.records.update_records(self.difficult, self.score, "test")
+
         dialog = QMessageBox()
         dialog.setText("Game Over\n Your sore: {}".format(self.score.get_score()))
         dialog.exec()

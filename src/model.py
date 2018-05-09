@@ -4,6 +4,7 @@ import random
 import os
 import collections
 import enum
+import utils
 
 
 class Difficult(enum.IntEnum):
@@ -36,8 +37,6 @@ class MovieData:
             os.makedirs(self.__IMAGE_DIRECTORY)
         self.__screenshot_location = self.__SCREENSHOT_LOCATION.format(self.__IMAGE_DIRECTORY, id)
         self.__is_screenshot_downloaded = False
-
-
 
     def __del__(self):
         if self.__is_screenshot_downloaded:
@@ -157,6 +156,38 @@ class Score:
 
     def clear_score(self):
         self.__score = 0
+
+
+class Records(metaclass=utils.Singleton):
+    __PATH_TO_RECORDS_DATA__ = "../data/records.json"
+    RECORDS_COUNT_LIMIT = 10
+
+    def __init__(self):
+        # [[{"name": "test", "score": 100}], [], []]
+        with open(self.__PATH_TO_RECORDS_DATA__, 'r') as f:
+            self.__records = json.load(f)
+
+    def __save_to_disk(self):
+        with open(self.__PATH_TO_RECORDS_DATA__, 'w') as f:
+            json.dump(self.__records, f)
+
+    def is_score_record(self, difficult: Difficult, score: Score) -> bool:
+        return self.__records[difficult][0]["score"] < score.get_score()
+
+    def update_records(self, difficult: Difficult, score: Score, name: str="") -> None:
+        if self.is_score_record(difficult, score):
+            self.__records[difficult][0]["score"] = score.get_score()
+            self.__records[difficult][0]["name"] = name
+            self.__records[difficult].sort(key=lambda r: r["score"])
+
+            self.__save_to_disk()
+
+    def get_records(self, difficult: Difficult):
+        yield from self.__records[difficult]
+
+
+
+
 
 
 

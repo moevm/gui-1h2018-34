@@ -1,6 +1,7 @@
-from PyQt5.QtWidgets import QButtonGroup, QLabel
+from PyQt5.QtWidgets import QButtonGroup, QLabel, QWidget, QGridLayout
 from PyQt5.QtCore import QTimer, pyqtSlot, pyqtSignal, QObject, Qt
 from PyQt5.QtGui import QResizeEvent
+import model
 
 
 class AnswerButtons(QButtonGroup):
@@ -30,3 +31,36 @@ class Screenshot(QLabel):
         super(Screenshot, self).resizeEvent(a0)
         if self.__screenshot is not None:
             self.setPixmap(self.__screenshot.scaled(self.width(), self.height(), Qt.KeepAspectRatio))
+
+
+class RecordsTable(QWidget):
+    def __init__(self, difficult: model.Difficult):
+        super(RecordsTable, self).__init__()
+        self.difficult = difficult
+        self.grid = QGridLayout(self)
+
+        records = model.Records()
+        for row in range(records.RECORDS_COUNT_LIMIT):
+            name = QLabel("test")
+            score = QLabel("0")
+            self.grid.addWidget(name, row, 0)
+            self.grid.addWidget(score, row, 1)
+        self.update_records()
+
+    def update_records(self):
+        records = model.Records()
+        for i, record in enumerate(records.get_records(self.difficult)):
+            row = records.RECORDS_COUNT_LIMIT - 1 - i
+            if record["score"] > 0:
+                name = "{}) {}".format(row + 1, record["name"])
+                score = str(record["score"])
+            else:
+                name, score = "", ""
+
+            self.grid.itemAtPosition(row, 0).widget().setText(name)
+            self.grid.itemAtPosition(row, 1).widget().setText(score)
+
+
+
+
+
