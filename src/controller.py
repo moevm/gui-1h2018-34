@@ -1,27 +1,74 @@
-from PyQt5.QtCore import pyqtSignal, pyqtSlot, QObject
+from PyQt5.QtCore import pyqtSignal, pyqtSlot, QObject, QTimer
 from PyQt5.QtGui import QPixmap
 import model
 import view.windows
 
 
+class GameTimer(QObject):
+    # Signals
+    time_over = pyqtSignal()
+    time_changed = pyqtSignal(int)
+
+    def __init__(self, parent=None):
+        QObject.__init__(self, parent)
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.__tick)
+        self.timer.setInterval(1000)  # 1 sec
+
+        self.time_left = 0
+
+    def set_time(self, time: int) -> None:
+        self.time_left = time
+
+    def add_time(self, time: int) -> None:
+        self.time_left += time
+
+    def start(self):
+        self.time_changed.emit(self.time_left)
+        self.timer.start()
+
+    def stop(self):
+        self.timer.stop()
+
+    @pyqtSlot()
+    def __tick(self):
+        self.time_left -= 1
+        if self.time_left <= 0:
+            self.time_left = 0
+            self.timer.stop()
+            self.time_over.emit()
+
+
+        self.time_changed.emit(self.time_left)
+
+
 class GameController(QObject):
+    __TIMER_START_CAPACITY = 20
+    __TIMER_ADDITION = 5
+
     # Signals
     screenshot_changed = pyqtSignal("QPixmap")
     answer_options_changed = pyqtSignal(list)
     score_changed = pyqtSignal(int)
+    timer_changed = pyqtSignal(int)
 
-    def __init__(self, image_size, parent=None):
+    def __init__(self, parent=None):
         QObject.__init__(self, parent)
-        self.image_size = image_size
         self.picked_movies = None
         self.difficult = model.Difficult.EASY
 
         self.picker = model.MoviesPicker()
         self.score = model.Score()
-
         self.records = model.Records()
 
-    def __game_over(self):
+        self.timer = GameTimer()
+        self.timer.time_over.connect(self.game_over)
+        self.timer.time_changed.connect(self.timer_changed)
+
+    @pyqtSlot()
+    def game_over(self):
+        self.timer.stop()
+
         dialog = view.windows.GameOverWindow(self.score)
         if not self.records.is_score_record(self.difficult, self.score):
             dialog.ui.name_textbox.setVisible(False)
@@ -36,8 +83,9 @@ class GameController(QObject):
     def choose_answer(self, answer_id):
         if self.picked_movies.get_answer_options()[answer_id] is self.picked_movies.get_answer():
             self.score.add_points(1)
+            self.timer.add_time(self.__TIMER_ADDITION)
         else:
-            self.__game_over()
+            self.game_over()
 
         self.score_changed.emit(self.score.get_score())
         self.next_screenshot()
@@ -48,6 +96,8 @@ class GameController(QObject):
         self.score.clear_score()
         self.picker.clear_picked_movies_history()
         self.next_screenshot()
+        self.timer.set_time(self.__TIMER_START_CAPACITY)
+        self.timer.start()
 
     @pyqtSlot()
     def next_screenshot(self):

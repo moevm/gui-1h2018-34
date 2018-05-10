@@ -17,7 +17,7 @@ buttons = elements.AnswerButtons()
 difficult_buttons = QButtonGroup()
 
 # create controllers
-game_controller = controller.GameController((game_window.ui.pic_label.width(), game_window.ui.pic_label.height()))
+game_controller = controller.GameController()
 ui_controller = controller.UIController()
 
 # setup objects
@@ -34,6 +34,7 @@ difficult_buttons.addButton(difficult_window.ui.pushButton_3, model.Difficult.HA
 game_controller.screenshot_changed.connect(game_window.ui.pic_label.set_screenshot)
 game_controller.score_changed.connect(game_window.ui.score.setNum)
 game_controller.answer_options_changed.connect(buttons.change_labels)
+game_controller.timer_changed.connect(game_window.ui.timer_label.setNum)
 
 buttons.buttonClicked[int].connect(game_controller.choose_answer)
 
