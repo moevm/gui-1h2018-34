@@ -3,13 +3,14 @@ from view.uis import main_menu, difficult_menu, game, records, pause_menu, game_
 from view.elements import RecordsTable
 import model
 from PyQt5.QtCore import pyqtSlot, pyqtSignal
-from PyQt5.QtGui import QKeySequence, QMoveEvent, QResizeEvent
+from PyQt5.QtGui import QKeySequence, QMoveEvent, QResizeEvent, QShowEvent
 
 
 class Window(QWidget):
     # signals
     resized = pyqtSignal(QResizeEvent)
     moved = pyqtSignal(QMoveEvent)
+    showed = pyqtSignal(QWidget)
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -21,6 +22,10 @@ class Window(QWidget):
     def resizeEvent(self, event):
         super().resizeEvent(event)
         self.resized.emit(event)
+
+    def showEvent(self, event: QShowEvent):
+        super().showEvent(event)
+        self.showed.emit(self)
 
 
 class MainMenuWindow(Window):

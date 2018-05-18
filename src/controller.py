@@ -3,6 +3,7 @@ from PyQt5.QtGui import QPixmap
 import model
 from view.windows import GameOverWindow, Window
 from PyQt5.QtGui import QMoveEvent, QResizeEvent
+from PyQt5.QtWidgets import QWidget
 
 
 class GameTimer(QObject):
@@ -167,20 +168,26 @@ class WindowsManager(QObject):
     def __init__(self, parent=None):
         super().__init__(parent)
         self._windows = []
+        self._size = None
+        self._pos = None
 
     def add_window(self, window: Window) -> None:
         window.resized.connect(self.resize)
         window.moved.connect(self.move)
-        self._windows.append(window)
+        window.showed.connect(self.window_showed)
+        if self._size is None:
+            self._size = window.size()
+            self._pos = window.pos()
 
     @pyqtSlot(QResizeEvent)
     def resize(self, event: QResizeEvent) -> None:
-        for window in self._windows:
-            if window.size() != event.size():
-                window.resize(event.size())
+        self._size = event.size()
 
     @pyqtSlot(QMoveEvent)
     def move(self, event: QMoveEvent) -> None:
-        for window in self._windows:
-            if window.pos() != event.pos():
-                window.move(event.pos())
+        self._pos = event.pos()
+
+    @pyqtSlot(QWidget)
+    def window_showed(self, window: QWidget):
+        window.resize(self._size)
+        window.move(self._pos)
