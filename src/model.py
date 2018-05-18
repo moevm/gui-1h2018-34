@@ -5,8 +5,9 @@ import os
 import collections
 import enum
 import utils
-from PyQt5.QtCore import pyqtSignal, pyqtSlot, QObject
-
+from PyQt5.QtCore import pyqtSignal, pyqtSlot, QObject, QUrl
+from PyQt5.QtNetwork import QNetworkAccessManager, QNetworkRequest
+from PyQt5.QtGui import QImage, QPixmap
 
 class Difficult(enum.IntEnum):
     EASY = 0
@@ -24,25 +25,22 @@ def compute_difficult(votes_count):
         return Difficult.EASY
 
 
-class MovieData:
-    __IMAGE_DIRECTORY = "../img/"
-    __SCREENSHOT_LOCATION = "{}screenshot{}.jpg"
+class MovieData(QObject):
+    # Signals
+    screenshot_downloaded = pyqtSignal("QPixmap")
 
-    def __init__(self, title, screenshots_links, votes_count, id):
+    def __init__(self, title, screenshots_links, votes_count, id, parent=None):
+        super().__init__(parent)
+
         self.title = title
         self.screenshot_link = random.choice(screenshots_links)
         self.votes_count = votes_count
         self.id = id
 
-        if not os.path.exists(self.__IMAGE_DIRECTORY):
-            os.makedirs(self.__IMAGE_DIRECTORY)
-        self.__screenshot_location = self.__SCREENSHOT_LOCATION.format(self.__IMAGE_DIRECTORY, id)
+        self._screenshot = None
         self.__is_screenshot_downloaded = False
-
-    def __del__(self):
-        if self.__is_screenshot_downloaded:
-            os.remove(self.__screenshot_location)
-            self.__is_screenshot_downloaded = False
+        self._network_manager = QNetworkAccessManager()
+        self._network_manager.finished.connect(self._downloaded)
 
     def get_title(self):
         return self.title
@@ -50,17 +48,27 @@ class MovieData:
     def get_difficult(self):
         return compute_difficult(self.votes_count)
 
-    def download_screenshot(self):
-        if not self.__is_screenshot_downloaded:
-            urllib.request.urlretrieve(self.screenshot_link, self.__screenshot_location)
-            self.__is_screenshot_downloaded = True
-
-    def get_screenshot(self):
-        self.download_screenshot()
-        return self.__screenshot_location
-
     def get_id(self):
         return self.id
+
+    def download_screenshot(self):
+        if not self.__is_screenshot_downloaded:
+            # print("download started " + self.screenshot_link)
+            request = QNetworkRequest(QUrl(self.screenshot_link))
+            request.setAttribute(QNetworkRequest.FollowRedirectsAttribute, True)
+            self._network_manager.get(request)
+        else:
+            self.screenshot_downloaded.emit(self._screenshot)
+
+    @pyqtSlot("QNetworkReply*")
+    def _downloaded(self, reply):
+        self._screenshot = QPixmap()
+        self._screenshot.loadFromData(reply.readAll())
+        if self._screenshot.isNull():
+            print("download failed")
+            return
+        self.__is_screenshot_downloaded = True
+        self.screenshot_downloaded.emit(self._screenshot)
 
 
 class Movies:

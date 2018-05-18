@@ -103,10 +103,9 @@ class GameController(QObject):
     def next_screenshot(self):
         self.picked_movies = self.picker.pick_movies(self.difficult)
         answer = self.picked_movies.get_answer()
+        answer.screenshot_downloaded.connect(self.screenshot_changed)
+        answer.download_screenshot()
 
-        pixmap = QPixmap(answer.get_screenshot())
-
-        self.screenshot_changed.emit(pixmap)
         self.answer_options_changed.emit(
             [answer.get_title() for answer in self.picked_movies.get_answer_options()])
 
