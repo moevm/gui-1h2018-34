@@ -167,7 +167,7 @@ class UIController(QObject):
 class WindowsManager(QObject):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self._windows = []
+        self._current_window = None
         self._size = None
         self._pos = None
 
@@ -175,19 +175,21 @@ class WindowsManager(QObject):
         window.resized.connect(self.resize)
         window.moved.connect(self.move)
         window.showed.connect(self.window_showed)
-        if self._size is None:
-            self._size = window.size()
-            self._pos = window.pos()
+        
+    @pyqtSlot(QResizeEvent, QWidget)
+    def resize(self, event: QResizeEvent, window: QWidget) -> None:
+        if window is self._current_window:
+            self._size = event.size()
 
-    @pyqtSlot(QResizeEvent)
-    def resize(self, event: QResizeEvent) -> None:
-        self._size = event.size()
-
-    @pyqtSlot(QMoveEvent)
-    def move(self, event: QMoveEvent) -> None:
-        self._pos = event.pos()
+    @pyqtSlot(QMoveEvent, QWidget)
+    def move(self, event: QMoveEvent, window: QWidget) -> None:
+        if window is self._current_window:
+            self._pos = event.pos()
 
     @pyqtSlot(QWidget)
     def window_showed(self, window: QWidget):
-        window.resize(self._size)
-        window.move(self._pos)
+        self._current_window = window
+        if self._size is not None:
+            window.resize(self._size)
+        if self._pos is not None:
+            window.move(self._pos)

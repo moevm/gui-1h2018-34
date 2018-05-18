@@ -8,8 +8,8 @@ from PyQt5.QtGui import QKeySequence, QMoveEvent, QResizeEvent, QShowEvent
 
 class Window(QWidget):
     # signals
-    resized = pyqtSignal(QResizeEvent)
-    moved = pyqtSignal(QMoveEvent)
+    resized = pyqtSignal(QResizeEvent, QWidget)
+    moved = pyqtSignal(QMoveEvent, QWidget)
     showed = pyqtSignal(QWidget)
 
     def __init__(self, parent=None):
@@ -17,11 +17,11 @@ class Window(QWidget):
 
     def moveEvent(self, event):
         super().moveEvent(event)
-        self.moved.emit(event)
+        self.moved.emit(event, self)
 
     def resizeEvent(self, event):
         super().resizeEvent(event)
-        self.resized.emit(event)
+        self.resized.emit(event, self)
 
     def showEvent(self, event: QShowEvent):
         super().showEvent(event)
