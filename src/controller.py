@@ -1,7 +1,8 @@
 from PyQt5.QtCore import pyqtSignal, pyqtSlot, QObject, QTimer
 from PyQt5.QtGui import QPixmap
 import model
-import view.windows
+from view.windows import GameOverWindow, Window
+from PyQt5.QtGui import QMoveEvent, QResizeEvent
 
 
 class GameTimer(QObject):
@@ -65,11 +66,16 @@ class GameController(QObject):
         self.timer.time_over.connect(self.game_over)
         self.timer.time_changed.connect(self.timer_changed)
 
+
+    @pyqtSlot()
+    def stop_game(self):
+        self.timer.stop()
+
     @pyqtSlot()
     def game_over(self):
         self.timer.stop()
 
-        dialog = view.windows.GameOverWindow(self.score)
+        dialog = GameOverWindow(self.score)
         if not self.records.is_score_record(self.difficult, self.score):
             dialog.ui.name_textbox.setVisible(False)
             dialog.ui.new_record_label.setVisible(False)
@@ -155,3 +161,26 @@ class UIController(QObject):
         self.hide_records_window.emit()
 
         self.show_main_menu.emit()
+
+
+class WindowsManager(QObject):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self._windows = []
+
+    def add_window(self, window: Window) -> None:
+        window.resized.connect(self.resize)
+        window.moved.connect(self.move)
+        self._windows.append(window)
+
+    @pyqtSlot(QResizeEvent)
+    def resize(self, event: QResizeEvent) -> None:
+        for window in self._windows:
+            if window.size() != event.size():
+                window.resize(event.size())
+
+    @pyqtSlot(QMoveEvent)
+    def move(self, event: QMoveEvent) -> None:
+        for window in self._windows:
+            if window.pos() != event.pos():
+                window.move(event.pos())

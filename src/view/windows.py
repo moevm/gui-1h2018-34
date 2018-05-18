@@ -2,24 +2,42 @@ from PyQt5.QtWidgets import QWidget, QDialog
 from view.uis import main_menu, difficult_menu, game, records, pause_menu, game_over_menu
 from view.elements import RecordsTable
 import model
-from PyQt5.QtCore import pyqtSlot, pyqtSignal, pyqtSlot, QObject, Qt
-from PyQt5.QtGui import QKeySequence
+from PyQt5.QtCore import pyqtSlot, pyqtSignal
+from PyQt5.QtGui import QKeySequence, QMoveEvent, QResizeEvent
 
-class MainMenuWindow(QWidget):
+
+class Window(QWidget):
+    # signals
+    resized = pyqtSignal(QResizeEvent)
+    moved = pyqtSignal(QMoveEvent)
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+
+    def moveEvent(self, event):
+        super().moveEvent(event)
+        self.moved.emit(event)
+
+    def resizeEvent(self, event):
+        super().resizeEvent(event)
+        self.resized.emit(event)
+
+
+class MainMenuWindow(Window):
     def __init__(self, parent=None):
         QWidget.__init__(self, parent)
         self.ui = main_menu.Ui_Form()
         self.ui.setupUi(self)
 
 
-class DifficultMenuWindow(QWidget):
+class DifficultMenuWindow(Window):
     def __init__(self, parent=None):
         QWidget.__init__(self, parent)
         self.ui = difficult_menu.Ui_Form()
         self.ui.setupUi(self)
 
 
-class GameWindow(QWidget):
+class GameWindow(Window):
     exit_to_main_menu = pyqtSignal()
 
     def __init__(self, parent=None):
@@ -39,7 +57,7 @@ class GameWindow(QWidget):
                 self.exit_to_main_menu.emit()
 
 
-class RecordsWindow(QWidget):
+class RecordsWindow(Window):
     def __init__(self, parent=None):
         QWidget.__init__(self, parent)
         self.ui = records.Ui_Form()

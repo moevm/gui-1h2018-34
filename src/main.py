@@ -19,8 +19,14 @@ difficult_buttons = QButtonGroup()
 # create controllers
 game_controller = controller.GameController()
 ui_controller = controller.UIController()
+window_manager = controller.WindowsManager()
 
 # setup objects
+window_manager.add_window(main_menu)
+window_manager.add_window(game_window)
+window_manager.add_window(difficult_window)
+window_manager.add_window(records_window)
+
 buttons.addButton(game_window.ui.pushButton, 0)
 buttons.addButton(game_window.ui.pushButton_2, 1)
 buttons.addButton(game_window.ui.pushButton_3, 2)
@@ -59,6 +65,7 @@ records_window.ui.toMainMenu.clicked.connect(ui_controller.to_main_menu)
 difficult_window.ui.ToMainMenu.clicked.connect(ui_controller.to_main_menu)
 
 game_window.exit_to_main_menu.connect(ui_controller.to_main_menu)
+game_window.exit_to_main_menu.connect(game_controller.stop_game)
 
 
 # start app
