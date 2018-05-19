@@ -1,0 +1,3 @@
+[console_scripts]
+guess-the-movie = guess_the_movie.main:main
+
